@@ -194,8 +194,27 @@
         </div>
     </body>
     <script>
-        function toast(options) {
-          console.log(options);
+        function showToast(options) {
+            // Create a new toast element
+            var toastElement = document.createElement('div');
+            toastElement.className = 'toast';
+            toastElement.innerHTML = `
+                <div class="toast__icon">${options.type}</div>
+                <div class="toast__body">
+                    <div class="toast__title">${options.title}</div>
+                    <div class="toast__msg">${options.message}</div>
+                </div>
+                <div class="toast__close" onclick="closeToast(this)">X</div>
+            `;
+
+            // Append the toast element to the toast container
+            var toastContainer = document.getElementById('toast');
+            toastContainer.appendChild(toastElement);
+
+            // Set a timeout to remove the toast after the specified duration
+            setTimeout(function () {
+                toastContainer.removeChild(toastElement);
+            }, options.duration);
         }
 
         function showTheGirl() {
@@ -215,6 +234,11 @@
               duration: 5000
             });  
             window.location.href = "jav.html";
+        }
+        function closeToast(element) {
+            // Remove the toast element when the close button is clicked
+            var toastContainer = document.getElementById('toast');
+            toastContainer.removeChild(element.parentNode);
         }
     </script>
     </html>
