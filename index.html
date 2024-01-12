@@ -1,618 +1,216 @@
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+        crossorigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý sản phẩm</title>
+        <title>One girl coming to you</title>
     </head>
     <style>
         * {
-            padding: 0px;
-            margin: 0px;
-            box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        font-family: system-ui, sans-serif;
+        background-color: #f4f4f5;
+      }
+      
+      body > div {
+        margin: auto;
+      }
+      
+      /* ======= Buttons ======== */
+      
+      /* Block */
+      .btn {
+        display: inline-block;
+        text-decoration: none;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        color: #fff;
+        padding: 12px 48px;
+        border-radius: 50px;
+        cursor: pointer;
+        min-width: 120px;
+        transition: opacity 0.2s ease;
+      }
+      
+      /* Modifier */
+      .btn--size-l {
+        padding: 16px 56px;
+      }
+      
+      .btn--size-s {
+        padding: 8px 32px;
+      }
+      
+      .btn:hover {
+        opacity: 0.8;
+      }
+      
+      .btn + .btn {
+        margin-left: 16px;
+      }
+      
+      .btn--success {
+        background-color: #71be34;
+      }
+      
+      .btn--warn {
+        background-color: #ffb702;
+      }
+      
+      .btn--danger {
+        background-color: #ff623d;
+      }
+      
+      .btn--disabled {
+        opacity: 0.5 !important;
+        cursor: default;
+      }
+      
+      /* ======= Toast message ======== */
+      
+      #toast {
+        position: fixed;
+        top: 32px;
+        right: 32px;
+        z-index: 999999;
+      }
+      
+      .toast {
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 2px;
+        padding: 20px 0;
+        min-width: 400px;
+        max-width: 450px;
+        border-left: 4px solid;
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.08);
+        transition: all linear 0.3s;
+      }
+      
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(calc(100% + 32px));
         }
-
-        .container {
-            max-width: 900px;
-            margin: 0px auto;
+        to {
+          opacity: 1;
+          transform: translateX(0);
         }
-
-        .row {
-            width: 100%;
-            padding: 5px;
-            margin: 5px 0px;
+      }
+      
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
         }
-
-        .heading-4 {
-            font-size: 25px;
-            font-weight: bolder;
-        }
-
-        .btn {
-            border: none;
-            outline: none;
-            border: 1px solid gray;
-            border-radius: 4px;
-            padding: 5px 15px;
-        }
-
-        .btn-primary {
-            background-color: green;
-            border: 1px solid green;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: darkgreen;
-            cursor: pointer;
-        }
-
-        .btn-warning {
-            background-color: orange;
-            border: 1px solid orange;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background-color: darkgoldenrod;
-            cursor: pointer;
-        }
-
-        .btn-danger {
-            background-color: red;
-            border: 1px solid red;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: darkred;
-            cursor: pointer;
-        }
-
-        .table {
-            width: 100%;
-        }
-
-        .table,
-        .table tr,
-        .table th,
-        .table td {
-            border-collapse: collapse;
-        }
-
-        .modal-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 101%;
-            height: 100%;
-            background-color: rgba(255 , 255, 255 , 0.9);
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            z-index: 1;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .close-modal {
-            cursor: pointer;
-            font-size: 24px;
-            color: #888;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-        .avatar-lg {
-            width: 100px;
-            height: 100px;
-        }
-        .modal {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            width: 80%;
-            max-width: 600px;
-        }
-        .create-contact {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-direction: column;
-        }
-        .preview-avatar {
-            width: 100%;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .contact-info {
-            width: 100%;
-        }
-
-        .edit {
-
-            display: inline-block;
-            outline: none;
-            border-width: 0px;
-            border-radius: 3px;
-            box-sizing: border-box;
-            font-size: inherit;
-            font-weight: 500;
-            max-width: 100%;
-            text-align: center;
-            text-decoration: none;
-            transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
-            background: rgb(0, 82, 204);
-            cursor: pointer;
-            height: 32px;
-            line-height: 32px;
-            padding: 0px 12px;
-            vertical-align: middle;
-            width: auto;
-            font-size: 14px;
-            color: rgb(255, 255, 255);
-            :hover {
-                background: rgb(0, 101, 255);
-                text-decoration: inherit;
-                transition-duration: 0s, 0.15s;
-                color: rgb(255, 255, 255);
-            }
-
-        }
-
-        .form-group {
-
-        }
-        .register-modal,
-        .login-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 300px;
-            height: 10px;
-            background-color: rgba(255, 255, 255, 0.9);
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            z-index: 1;
-        }
-        .form-container {
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        .form-container label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-container input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: green;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            background-color: #f1f1f1;
-        }
-
-        .header h1 {
-            margin-left: 20px;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .auth-buttons button {
-            margin-left: 10px;
-        }
+      }
+      
+      .toast--success {
+        border-color: #47d864;
+      }
+      
+      .toast--success .toast__icon {
+        color: #47d864;
+      }
+      
+      .toast--info {
+        border-color: #2f86eb;
+      }
+      
+      .toast--info .toast__icon {
+        color: #2f86eb;
+      }
+      
+      .toast--warning {
+        border-color: #ffc021;
+      }
+      
+      .toast--warning .toast__icon {
+        color: #ffc021;
+      }
+      
+      .toast--error {
+        border-color: #ff623d;
+      }
+      
+      .toast--error .toast__icon {
+        color: #ff623d;
+      }
+      
+      .toast + .toast {
+        margin-top: 24px;
+      }
+      
+      .toast__icon {
+        font-size: 24px;
+      }
+      
+      .toast__icon,
+      .toast__close {
+        padding: 0 16px;
+      }
+      
+      .toast__body {
+        flex-grow: 1;
+      }
+      
+      .toast__title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+      
+      .toast__msg {
+        font-size: 14px;
+        color: #888;
+        margin-top: 6px;
+        line-height: 1.5;
+      }
+      
+      .toast__close {
+        font-size: 20px;
+        color: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+      }      
     </style>
     <body>
-    <div class="header" style="display: flex;">
-        <img src="https://th.bing.com/th/id/R.0cdcf97a7b2ffbac69c068dbd060fb7d?rik=7m2f54q85W1o5w&pid=ImgRaw&r=0" width="135px">
-        <h1>CÔNG TY TNHH MTV NHẬT HUY GROUP</h1>
-        <div class="auth-buttons">
-            <button class="btn btn-warning" onclick="openRegisterModal()">Đăng ký</button>
-            <button class="btn btn-danger" onclick="openLoginModal()">Đăng nhập</button>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row1">
-            <h4 class="heading-4">Quản lý sản phẩm</h4>
-            <button class="btn btn-primary" onclick="openModal()">Tùy chỉnh sản phẩm</button>
-        </div>
-        <div class= "row2">
-            <table border="1" style="inline-size: 100%;">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Năm sản xuất</th>
-                    <th>Hạn sử dụng</th>
-                    <th>Giá</th>
-                    <th>Ảnh</th>
-                    <th>Tùy chọn</th>
-                </tr>
-                </thead>
-                <tbody id="list-product">
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-container">
-        <div class="modal">
-            <div class="modal-header">
-                <div class="modal-title">Tùy chỉnh sản phẩm</div>
-                <div class="close-modal" onclick="closeModal()">&times;</div>
-            </div>
-            <div class="modal-body">
-                <div class="create-contact">
-                    <div class="preview-avatar">
-                        <img class="avatar-lg" src="https://media.knowde.com/image/upload/f_auto,q_auto/v1620023891/production/Product/309512/logo/image" alt="Logo công ty">
-                    </div>
-                    <div class="contact-info">
-                        <table border="1" style="inline-size: 500px; block-size: 300px" ;>
-                            <tr id="id1">
-                                <th colspan="2"> Thông tin sản phẩm</th>
-                            </tr>
+        <div id="toast"></div>
 
-                            <tr>
-                                <th>ID</th>
-                                <td><input type="number" id="id"></td>
-                            </tr>
-                            <tr>
-                                <th>Tên sản phẩm</th>
-                                <td><input type="text" id="nameproduct"></td>
-                            </tr>
-                            <tr>
-                                <th>Ngày sản xuất</th>
-                                <td><input type="text" id="dayproduct"></td>
-                            </tr>
-                            <tr>
-                                <th>Hạn sử dụng</th>
-                                <td><input type="text" id="best_before"></td>
-                            </tr>
-                            <tr>
-                                <th>Giá</th>
-                                <td><input type="text" id="price"></td>
-                            </tr>
-                            <tr>
-                                <th>Ảnh</th>
-                                <td><input type="text" id="img"></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button style="background-color: limegreen" id="add" onclick="addProduct()">Add</button>
-                    <button style="background-color: gold" id="edit" onclick="updateProduct()">Save</button>
-                </div>
-            </div>
+        <div>
+          <div onclick="showTheGirl();" class="btn btn--success">Muốn vào trang mua gái</div>
+          <div onclick="showJavGirls();" class="btn btn--danger">Muốn vào trang ngắm gái </div>
         </div>
-    </div>
-    <div class="modal-container" id="registerModal">
-        <div class="form-container">
-            <label for="registerUsername">Username:</label>
-            <input type="text" id="registerUsername" placeholder="Enter your username">
-        </div>
-        <div class="form-container">
-            <label for="registerPassword">Password:</label>
-            <input type="password" id="registerPassword" placeholder="Enter your password">
-        </div>
-        <button class="btn btn-primary" onclick="registerUser()">Register</button>
-        <div class="form-container">
-            <button class="btn btn-danger" onclick="closeRegisterModal()">Cancel</button>
-        </div>
-    </div>
-
-    <!-- Login Form -->
-    <div class="modal-container" id="loginModal">
-        <div class="form-container">
-            <label for="loginUsername">Username:</label>
-            <input type="text" id="loginUsername" placeholder="Enter your username">
-        </div>
-        <div class="form-container">
-            <label for="loginPassword">Password:</label>
-            <input type="password" id="loginPassword" placeholder="Enter your password">
-        </div>
-        <button class="btn btn-primary" onclick="loginUser()">Login</button>
-        <div class="form-container">
-            <button class="btn btn-danger" onclick="closeLoginModal()">Cancel</button>
-        </div>
-    </div>
     </body>
     <script>
-        class Product {
-            constructor(id, nameproduct, dayproduct, best_before, price, img ) {
-                this.id = id;
-                this.nameproduct = nameproduct;
-                this.dayproduct = dayproduct;
-                this.best_before = best_before;
-                this.price = price;
-                this.img = img;
-            }
-            getID() {
-                return this.id;
-            }
-            getNameProduct() {
-                return this.nameproduct;
-            }
-            getDayProduct() {
-                return this.dayproduct;
-            }
-            getBestBefore() {
-                return this.best_before;
-            }
-            getPrice() {
-                return this.price;
-            }
-            getImg() {
-                return this.img;
-            }
-            setID(id) {
-                this.id = id;
-            }
-            setNameProduct(nameproduct) {
-                this.nameproduct = nameproduct;
-            }
-            setDayProduct(dayproduct) {
-                this.dayproduct = dayproduct;
-            }
-            setBestBefore(best_before) {
-                this.best_before = best_before;
-            }
-            setPrice(price) {
-                this.price = price;
-            }
-            setImg(img) {
-                this.img = img;
-            }
-            edit(id, nameproduct, dayproduct, best_before, price, img) {
-                this.id = id;
-                this.nameproduct = nameproduct;
-                this.dayproduct = dayproduct;
-                this.best_before = best_before;
-                this.price = price;
-                this.img = img;
-            }
-        }
-
-        class ProductManagement {
-            constructor(arr) {
-                this.products = arr;
-            }
-
-            showList() {
-                let table = '';
-                for (let i = 0; i < this.products.length; i++) {
-                    table += '<tr>';
-                    table += '<td>' + this.products[i].getID() + '</td>';
-                    table += '<td>' + this.products[i].getNameProduct() + '</td>';
-                    table += '<td>' + this.products[i].getDayProduct() + '</td>';
-                    table += '<td>' + this.products[i].getBestBefore() + '</td>';
-                    table += '<td>' + this.products[i].getPrice() + '</td>';
-                    table += '<td><img width="100px" height="100px" src="' + this.products[i].getImg() + '"></td>';
-                    table += '<td>' +
-                        '<button style="background-color: red; color: white"  type="button" onclick="deleteProduct(' + i + ')">Delete</button> ' +
-                        ' <button  style="background-color: orange; color: white" type="button" onclick="editProduct(' + i + ')">Edit</button>' +
-                        '</td>';
-                    table += '</tr>';
-                }
-                document.getElementById('list-product').innerHTML = table;
-            }
-
-            addProduct(product) {
-                this.products.push(product);
-                this.showList();
-            }
-
-            delete(id) {
-                this.products.splice(id, 1);
-                this.showList();
-            }
-
-            findProductById(id) {
-                return this.products[id];
-            }
-
-            edit( id, nameproduct, dayproduct, best_before, price, img) {
-                for (let i = 0; i < this.products.length; i++) {
-                    if (this.products[i].id === id) {
-                        console.log('product')
-                        this.products[i].edit(id, nameproduct, dayproduct, best_before, price, img);
-                        break; // Once found and edited, exit the loop
-                    }
-                }
-                this.showList();
-            }
-        }
-
-        let product1 = new Product('001', 'Iphone 11 promax 1TB Silver Blue', '30/06/2020', '01/08/2024', '30.000.000 VNĐ', 'https://product.hstatic.net/1000330442/product/11pm_fc2db7dc23e54f5e9e7f94ee443cd17a_master.jpg');
-        let product2 = new Product('002', 'Macbook Pro 1Tb 16 Inch', '11/08/2019', '11/08/2027', '12.000.000 VNĐ', 'https://cdn2.cellphones.com.vn/x/media/catalog/product/m/a/macbook-pro-2021-007_4.jpg');
-        let product3 = new Product('003', 'Playstation 5 Digital Edition', '12/11/2021', '14/11/2027', '11.000.000 VNĐ', 'https://www.droidshop.vn/wp-content/uploads/2022/02/May-choi-game-PS5-Digital-Edition-Console.jpg');
-        let product4 = new Product('004','Iphone 15 Series 1TB~1024GB','11/11/2023','No limited','35.000.000 VNĐ','https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcT2UCEVoNbNqF9yCTdkKMCmoEzmn9uRs-h30r7zUcms08CEKcTuzypKxRNemvLdHNlnEG9gb4GgVRmjTbnc6oZoTRyhzQqGGb0eRbm-fnz_s8AFf4gRGE9NG3Lbi4JqVJj5kQSFUoRmOQ&usqp=CAc');
-        let product5 = new Product ('006','Iphone Xsmax 512gb Gold','11/04/2019','Không giới hạn','7.000.000 VNĐ','https://scontent.fhan20-1.fna.fbcdn.net/v/t39.30808-6/416142612_1767250530441466_6996115788527447929_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=dd5e9f&_nc_eui2=AeHiTVAeNGHulxm1vN-vvIaUPVFq39h-XjE9UWrf2H5eMfqn0Vgfq5UAyMvoGjaW1mBZJbwiYC2ro0g2vl3Nqug5&_nc_ohc=wQvwaUgMlz8AX8Yujqi&_nc_ht=scontent.fhan20-1.fna&oh=00_AfD13VAy6ehknD8MqJTVNOoW4dPuOJZYrIBgAr8F3lwrqg&oe=65A27411')
-        let arr = [product1, product2, product3, product4, product5];
-        let manage = new ProductManagement(arr);
-        manage.showList();
-
-        function addProduct() {
-            let id = document.querySelector('#id').value;
-            let nameproduct = document.querySelector('#nameproduct').value;
-            let dayproduct = document.querySelector('#dayproduct').value;
-            let best_before = document.querySelector('#best_before').value;
-            let price = document.querySelector('#price').value;
-            let img = document.querySelector('#img').value;
-
-            let newProduct = new Product(id, nameproduct, dayproduct, best_before, price, img);
-            manage.addProduct(newProduct);
-            closeModal();
-        }
-
-        function deleteProduct(index) {
-            manage.delete(index);
-        }
-
-        function editProduct(index) {
-            let product = manage.findProductById(parseInt(index));
-            document.querySelector('#id').value = product.getID();
-            document.querySelector('#nameproduct').value = product.getNameProduct();
-            document.querySelector('#dayproduct').value = product.getDayProduct();
-            document.querySelector('#best_before').value = product.getBestBefore();
-            document.querySelector('#price').value = product.getPrice();
-            document.querySelector('#img').value = product.getImg();
-
-            openModal();
-
-            document.querySelector('#add').style.display = 'none';
-            document.querySelector('#edit').style.display = 'block';
-
-            document.querySelector('#edit').addEventListener('click', function () {
-                updateProduct();
+        function showTheGirl() {
+            toast({
+              title: "Chơi luôn!",
+              message: "Vào kiếm kèo mua về thịt",
+              type: "success",
+              duration: 5000
             });
-            document.querySelector('#delete').addEventListener('click', function () {
-                deleteProduct(index);
-            });
+            window.location.href = "thegirl.html";
         }
-
-        function updateProduct() {
-            let id = document.querySelector('#id').value;
-            let nameproduct = document.querySelector('#nameproduct').value;
-            let dayproduct = document.querySelector('#dayproduct').value;
-            let best_before = document.querySelector('#best_before').value;
-            let price = document.querySelector('#price').value;
-            let img = document.querySelector('#img').value;
-            let product = manage.findProductById(id); // Changed from 'productId'
-            manage.edit( id, nameproduct, dayproduct, best_before, price, img);
-            closeModal();
+        function showJavGirls() {
+            toast({
+              title: "Tiếc quá",
+              message: "Ngắm xong đừng hối hận nhé.",
+              type: "error",
+              duration: 5000
+            });  
+            window.location.href = "jav.html";
         }
-        function openModal() {
-            document.querySelector('.modal-container').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.querySelector('.modal-container').style.display = 'none';
-            resetModal();
-        }
-
-        function resetModal() {
-            // Clear input fields when closing the modal
-            document.querySelector('#id').value = '';
-            document.querySelector('#nameproduct').value = '';
-            document.querySelector('#dayproduct').value = '';
-            document.querySelector('#best_before').value = '';
-            document.querySelector('#price').value = '';
-            document.querySelector('#img').value = '';
-
-            // Reset button display
-            document.querySelector('#add').style.display = 'block';
-            document.querySelector('#edit').style.display = 'none';
-        }
-        function changeAvatar(){
-            document.querySelector('.avatar-lg').src = document.querySelector('#avatar').value || 'images/noavatar.jpg';
-        }
-
-        function closeRegisterModal() {
-            document.querySelector('#registerModal').style.display = 'none';
-        }
-
-        function closeLoginModal() {
-            document.querySelector('#loginModal').style.display = 'none';
-        }
-
-        function openRegisterModal() {
-            document.querySelector('#registerModal').style.display = 'flex';
-        }
-
-        function openLoginModal() {
-            document.querySelector('#loginModal').style.display = 'flex';
-        }
-        let registeredUsers = [];
-
-        function loginUser() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-
-            const user = registeredUsers.find((user) => user.username === username && user.password === password);
-
-            if (user) {
-                alert('Đăng nhập thành công!');
-                closeLoginModal();
-                toggleAuthButtons(true);
-                localStorage.setItem('loggedInUser', JSON.stringify(user));
-            } else {
-                alert('Đăng nhập thất bại. Vui lòng kiểm tra tên đăng nhập và mật khẩu.');
-            }
-        }
-
-        function registerUser() {
-            const username = document.getElementById('registerUsername').value;
-            const password = document.getElementById('registerPassword').value;
-
-            if (username && password) {
-                // Check if the username is already registered
-                const existingUser = registeredUsers.find((user) => user.username === username);
-
-                if (existingUser) {
-                    alert('Tên đăng nhập đã tồn tại. Vui lòng chọn tên đăng nhập khác.');
-                } else {
-                    // Save the user information
-                    registeredUsers.push({ username, password });
-                    alert('Đăng ký thành công!');
-                    closeRegisterModal();
-                }
-            } else {
-                alert('Vui lòng điền đầy đủ thông tin đăng ký.');
-            }
-        }
-        function toggleAuthButtons(isLoggedIn) {
-            const authButtons = document.querySelector('.auth-buttons');
-            if (isLoggedIn) {
-                authButtons.style.display = 'none';
-            } else {
-                authButtons.style.display = 'flex';
-            }
-        }
-        function checkLoggedInUser() {
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                toggleAuthButtons(true);
-            }
-        }
-        // Gọi hàm này khi trang web được tải
-        checkLoggedInUser();
-        document.addEventListener('DOMContentLoaded', function () {
-            checkLoggedInUser();
-        });    
     </script>
     </html>
