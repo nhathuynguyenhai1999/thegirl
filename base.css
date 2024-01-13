@@ -1,3 +1,7 @@
+.back-login {
+    background: red;
+    color: white;
+}
 :root {
     --primary-color: #ee4d2d;
     --primary-color-rgba: rgb(238 , 75, 43);
